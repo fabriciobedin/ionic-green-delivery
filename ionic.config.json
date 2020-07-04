@@ -1,0 +1,7 @@
+{
+  "name": "farm-delivery",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
