@@ -1,23 +1,46 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { RouteReuseStrategy } from '@angular/router';
+import { NgModule, ErrorHandler } from "@angular/core";
+import { IonicApp, IonicModule, IonicErrorHandler } from "ionic-angular";
+import { AngularFireModule } from "@angular/fire";
+import { MyApp } from "./app.component";
+import { AngularFireAuthModule } from "@angular/fire/auth";
+import { AngularFireDatabaseModule } from "@angular/fire/database";
+import { firebaseConfig } from "./firebase.config";
+import { CartService } from "../pages/cart.service";
+import { HttpClientModule, HttpClient } from "@angular/common/http";
+import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { BrowserModule } from "@angular/platform-browser";
+import "firebase/storage";
+import { DatePicker } from "@ionic-native/date-picker";
 
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
+}
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
-  providers: [
-    StatusBar,
-    SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+  declarations: [MyApp],
+  imports: [
+    IonicModule.forRoot(MyApp),
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireAuthModule,
+    AngularFireDatabaseModule,
+    BrowserModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient]
+      }
+    })
   ],
-  bootstrap: [AppComponent]
+  exports: [BrowserModule],
+  bootstrap: [IonicApp],
+  entryComponents: [MyApp],
+  providers: [
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
+    CartService,
+    DatePicker
+  ]
 })
-export class AppModule {}
+export class AppModule { }
